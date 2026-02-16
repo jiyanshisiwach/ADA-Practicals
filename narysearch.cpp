@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
+#include <fstream>   // Added for CSV file handling
 
 using namespace std;
 using namespace chrono;
@@ -48,6 +49,10 @@ int main()
 {
     srand(time(0));
 
+    // Create CSV file
+    ofstream file("Practical4_NArySearch_Results.csv");
+    file << "InputSize,Partitions,AverageTime_ms,RandomKey\n";
+
     int configurations[3] = {50000, 70000, 100000};
     int searches = 20000;   // Increased for visible timing
 
@@ -73,7 +78,7 @@ int main()
 
             for (int i = 0; i < searches; i++)
             {
-                int key = arr[rand() % N];
+                int key = arr[rand() % N];  // Random key from array
                 nArySearch(arr, key, 0, N - 1, partitions);
             }
 
@@ -83,8 +88,15 @@ int main()
 
             cout << partitions << "\t\t"
                  << timeTaken / searches << endl;
+
+            // Write to CSV file
+            file << N << "," 
+                 << partitions << "," 
+                 << timeTaken / searches << "," 
+                 << arr[rand() % N] << "\n"; // Random key used
         }
     }
 
+    file.close();
     return 0;
 }
